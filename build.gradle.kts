@@ -44,6 +44,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
+tasks.register("printVersion") {
+    doLast {
+        println(project.version)
+    }
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
