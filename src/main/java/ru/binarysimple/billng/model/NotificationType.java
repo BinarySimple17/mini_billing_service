@@ -1,0 +1,19 @@
+package ru.binarysimple.billng.model;
+
+public enum NotificationType {
+    INFO("Info"),
+    SUCCESS("Success"),
+    FAIL("Fail"),
+    DEFAULT("Default");
+
+    private final String typeName;
+
+    NotificationType(String typeName) {
+        this.typeName = typeName;
+    }
+
+    @Override
+    public String toString() {
+        return typeName;
+    }
+}

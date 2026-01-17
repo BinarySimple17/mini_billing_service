@@ -16,5 +16,5 @@ public class OperationRequest {
     OperationType type;
     BigDecimal amount;
     @NotNull
-    Account account;
+    AccountOperationDto account;
 }

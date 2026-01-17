@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.binarysimple.billng.dto.*;
 import ru.binarysimple.billng.filter.AccountFilter;
+import ru.binarysimple.billng.kafka.UserEvent;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,4 +32,6 @@ public interface AccountService {
     AccountFullDto delete(Long id);
 
     void deleteMany(List<Long> ids);
+
+    void processUserEvent(UserEvent event);
 }

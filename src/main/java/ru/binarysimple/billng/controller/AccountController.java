@@ -43,6 +43,10 @@ public class AccountController {
     @PostMapping("/operate")
     public OperationDto operate(@RequestHeader("X-Username") String currentUsername, @RequestBody OperationRequest dto) {
 
+        if (!currentUsername.equals(dto.getAccount().getUsername())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
         if (dto.getAmount().compareTo(BigDecimal.ZERO) <= 0) { //check for negative {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount must be positive");
         }

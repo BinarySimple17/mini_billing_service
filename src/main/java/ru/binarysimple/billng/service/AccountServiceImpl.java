@@ -7,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import ru.binarysimple.billng.dto.*;
+import ru.binarysimple.billng.exception.BadRequestException;
+import ru.binarysimple.billng.exception.EntityNotFoundException;
+import ru.binarysimple.billng.exception.InsufficientFundsException;
 import ru.binarysimple.billng.filter.AccountFilter;
+import ru.binarysimple.billng.kafka.UserEvent;
 import ru.binarysimple.billng.mapper.AccountMapper;
 import ru.binarysimple.billng.mapper.OperationMapper;
 import ru.binarysimple.billng.model.Account;
@@ -50,21 +52,21 @@ public class AccountServiceImpl implements AccountService {
     public AccountFullDto getOne(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
         return accountMapper.toAccountFullDto(accountOptional.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id))));
+                new EntityNotFoundException("Entity with id `%s` not found".formatted(id))));
     }
 
     @Override
     public AccountFullDto getOne(String username) {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         return accountMapper.toAccountFullDto(accountOptional.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with username `%s` not found".formatted(username))));
+                new EntityNotFoundException("Entity with username `%s` not found".formatted(username))));
     }
 
     @Override
     public AccountInfoDto getOneInfo(String username) {
         Optional<Account> accountOptional = accountRepository.findByUsername(username);
         return accountMapper.toAccountInfoDto(accountOptional.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with username `%s` not found".formatted(username))));
+                new EntityNotFoundException("Entity with username `%s` not found".formatted(username))));
     }
 
     @Override
@@ -78,7 +80,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountFullDto create(AccountCreateDto dto) {
         if (accountRepository.findByUsername(dto.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Account with username `%s` already exists".formatted(dto.getUsername()));
+            throw new BadRequestException("Account with username `%s` already exists".formatted(dto.getUsername()));
         }
         Account account = accountMapper.toEntity(dto);
         Account resultAccount = accountRepository.save(account);
@@ -88,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountFullDto patch(Long id, JsonNode patchNode) throws IOException {
         Account account = accountRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id)));
+                new EntityNotFoundException("Entity with id `%s` not found".formatted(id)));
 
         AccountFullDto accountFullDto = accountMapper.toAccountFullDto(account);
         objectMapper.readerForUpdating(accountFullDto).readValue(patchNode);
@@ -132,7 +134,7 @@ public class AccountServiceImpl implements AccountService {
     public OperationDto operate(OperationRequest request, String username) {
 
         Account account = accountRepository.findByUsername(username).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with username `%s` not found".formatted(username)));
+                new EntityNotFoundException("Entity with username `%s` not found".formatted(username)));
 
         Operation operation = operationMapper.toEntity(request);
 
@@ -145,7 +147,7 @@ public class AccountServiceImpl implements AccountService {
             case WITHDRAW, PAYMENT -> {
 
                 if (account.getBalance().compareTo(request.getAmount()) < 0) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds");
+                    throw new InsufficientFundsException("Need more money");
                 }
 
                 account.setBalance(account.getBalance().subtract(request.getAmount()));
@@ -157,5 +159,13 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
 
         return operationMapper.toOperationDto(resultOperation);
+    }
+
+    @Override
+    public void processUserEvent(UserEvent event) {
+        AccountCreateDto accountCreateDto = accountMapper.toAccountCreateDto(event);
+
+        create(accountCreateDto);
+
     }
 }
