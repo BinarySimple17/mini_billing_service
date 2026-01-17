@@ -4,6 +4,8 @@ import org.mapstruct.*;
 import ru.binarysimple.billng.dto.AccountCreateDto;
 import ru.binarysimple.billng.dto.AccountFullDto;
 import ru.binarysimple.billng.dto.AccountInfoDto;
+import ru.binarysimple.billng.dto.AccountOperationDto;
+import ru.binarysimple.billng.kafka.UserEvent;
 import ru.binarysimple.billng.model.Account;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = {OperationMapper.class})
@@ -26,4 +28,10 @@ public interface AccountMapper {
     AccountCreateDto toAccountCreateDto(Account account);
 
     Account updateWithNull(AccountFullDto accountFullDto, @MappingTarget Account account);
+
+    Account toEntity(AccountOperationDto accountOperationDto);
+
+    AccountOperationDto toAccountOperationDto(Account account);
+
+    AccountCreateDto toAccountCreateDto(UserEvent event);
 }
