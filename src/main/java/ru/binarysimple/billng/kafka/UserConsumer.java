@@ -14,7 +14,7 @@ public class UserConsumer {
     private final AccountService accountService;
 
     @KafkaListener(topics = "${app.kafka.topics.user-events:user.events}", groupId = "billing-service")
-    public void onOrderEvent(@Payload UserEvent event) {
+    public void onUserEvent(@Payload UserEvent event) {
         log.info("Received user event {}", event.getUsername());
         accountService.processUserEvent(event);
     }
