@@ -32,13 +32,13 @@ data:
           sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="user1" password="${KAFKA_PASSWORD}";
 
         consumer:
-          group-id: notification-service
+          group-id: billing-service
           key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
           value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
           properties:
             spring.json.use.type.headers: false
-            spring.json.value.default.type: ru.binarysimple.notification.kafka.OrderEvent
+            spring.json.value.default.type: ru.binarysimple.billng.kafka.UserEvent
             spring.json.trusted.packages: "*"        
     
       springdoc:

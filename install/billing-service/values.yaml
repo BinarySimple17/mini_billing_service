@@ -120,7 +120,7 @@ autoscaling:
 volumes:
   - name: config-volume
     configMap:
-      name: billing-config
+      name: billing-service-config
       items:
         - key: application-kubernetes.yaml
           path: application-kubernetes.yaml
