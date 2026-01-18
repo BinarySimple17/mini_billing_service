@@ -11,6 +11,9 @@ metadata:
     "helm.sh/hook-weight": "-90"
 data:
   application-kubernetes.yaml: |
+    server:
+      port: 8080    
+    
     spring:
       datasource:
         url: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.auth.database }}

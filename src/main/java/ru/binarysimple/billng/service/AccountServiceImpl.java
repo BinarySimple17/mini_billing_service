@@ -22,6 +22,7 @@ import ru.binarysimple.billng.repository.AccountRepository;
 import ru.binarysimple.billng.repository.OperationRepository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -135,6 +136,11 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = accountRepository.findByUsername(username).orElseThrow(() ->
                 new EntityNotFoundException("Entity with username `%s` not found".formatted(username)));
+
+//        //на случай кривых исторических данных
+//        if (account.getBalance() == null) {
+//            account.setBalance(BigDecimal.ZERO);
+//        }
 
         Operation operation = operationMapper.toEntity(request);
 

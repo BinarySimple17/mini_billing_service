@@ -44,7 +44,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 server:
-  port: 8110
+  port: 8080
 
 endpoints:
   api-gateway: http://localhost:8090
@@ -64,7 +64,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info, prometheus
+        include: health,info, readiness, prometheus
   endpoint:
     health:
       show-details: always

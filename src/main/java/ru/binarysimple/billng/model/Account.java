@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,4 +31,11 @@ public class Account {
     @OneToMany(mappedBy = "account", orphanRemoval = true)
     @OrderBy("createdAt")
     private List<Operation> operations = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        if (balance == null) {
+            balance = BigDecimal.ZERO;
+        }
+    }
 }
