@@ -44,7 +44,8 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 server:
-  port: 8080
+#  port: 8080
+  port: ${PORT:8080}
 
 endpoints:
   api-gateway: http://localhost:8090

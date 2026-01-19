@@ -27,7 +27,7 @@ public class WebSecurityConfiguration {
                 // Разрешаем Swagger UI и API docs
                 .requestMatchers(
                         "/swagger-ui.html",
-                        "/swagger-ui/**",
+                        "/swagger-ui*/**",
                         "/v3/api-docs",
                         "/v3/api-docs/**",
                         "/webjars/**",
