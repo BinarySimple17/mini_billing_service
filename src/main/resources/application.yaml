@@ -1,9 +1,12 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   application:
     name: billng
 
   datasource:
-    url: jdbc:postgresql://localhost:5435/${DB_NAME:test_db}
+    url: jdbc:postgresql://localhost:5440/${DB_NAME:test_db}
     username: ${DB_USERNAME:test_user}
     password: ${DB_PASSWORD:test_password}
     driver-class-name: org.postgresql.Driver
@@ -24,15 +27,17 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+    liquibase-schema: public
+    default-schema: billing_db
     enabled: true
 
   kafka:
     bootstrap-servers: localhost:9092
 
-    properties:
-      security.protocol: SASL_PLAINTEXT
-      sasl.mechanism: PLAIN
-      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USER:user1}" password="${KAFKA_PASSWORD}";
+#    properties:
+#      security.protocol: SASL_PLAINTEXT
+#      sasl.mechanism: PLAIN
+#      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USER:user1}" password="${KAFKA_PASSWORD}";
 
     consumer:
       group-id: notification-service
@@ -42,10 +47,6 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-server:
-#  port: 8080
-  port: ${PORT:8080}
 
 endpoints:
   api-gateway: http://localhost:8090

@@ -16,4 +16,5 @@ public class OperationDto {
     LocalDateTime createdAt;
     OperationType type;
     BigDecimal amount;
+//    AccountInfoDto account;
 }
