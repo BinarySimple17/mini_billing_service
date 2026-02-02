@@ -36,6 +36,9 @@ public class Operation {
     @ToStringExclude
     private Account account;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

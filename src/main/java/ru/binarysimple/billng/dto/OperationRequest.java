@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class OperationRequest {
     OperationType type;
     BigDecimal amount;
+    Long orderId;
     @NotNull
     AccountOperationDto account;
 }
