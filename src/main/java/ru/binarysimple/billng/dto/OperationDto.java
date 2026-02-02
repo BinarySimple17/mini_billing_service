@@ -16,5 +16,6 @@ public class OperationDto {
     LocalDateTime createdAt;
     OperationType type;
     BigDecimal amount;
+    Long orderId;
 //    AccountInfoDto account;
 }

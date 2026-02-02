@@ -137,17 +137,12 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findByUsername(username).orElseThrow(() ->
                 new EntityNotFoundException("Entity with username `%s` not found".formatted(username)));
 
-//        //на случай кривых исторических данных
-//        if (account.getBalance() == null) {
-//            account.setBalance(BigDecimal.ZERO);
-//        }
-
         Operation operation = operationMapper.toEntity(request);
 
         operation.setAccount(account);
 
         switch (request.getType()) {
-            case DEPOSIT -> {
+            case DEPOSIT, REFUND -> {
                 account.setBalance(account.getBalance().add(request.getAmount()));
             }
             case WITHDRAW, PAYMENT -> {
