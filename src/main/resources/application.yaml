@@ -89,6 +89,4 @@ info:
 app:
   kafka:
     topics:
-#      order-events: order.events
       user-events: user.events
-#      bill-events: bill.events
